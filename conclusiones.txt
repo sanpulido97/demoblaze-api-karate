@@ -1,0 +1,9 @@
+CONCLUSIONES - Automatización API DemoBlaze
+
+Se desarrolló una solución de automatización para los servicios REST de Signup y Login de DemoBlaze utilizando Karate DSL, cubriendo los escenarios solicitados para validar tanto comportamientos exitosos como casos de error.
+
+Las pruebas implementadas permiten verificar la creación de nuevos usuarios, la validación de usuarios ya existentes durante el registro, el inicio de sesión con credenciales válidas y la respuesta del sistema ante credenciales incorrectas. Esto proporciona una cobertura básica pero representativa de los flujos principales de autenticación de la aplicación.
+
+Durante la ejecución se registraron las solicitudes enviadas y las respuestas obtenidas, lo que facilitó la validación de los resultados esperados y el análisis del comportamiento de cada servicio. Esta información resulta útil para identificar posibles inconsistencias y garantizar que las funcionalidades evaluadas respondan de acuerdo con lo esperado.
+
+En términos generales, la ejecución fue exitosa y todos los escenarios definidos finalizaron correctamente. Como resultado, se obtuvo una solución estable, reproducible y alineada con los requisitos planteados para la prueba técnica, permitiendo ejecutar las validaciones de forma automatizada mediante Gradle cuando sea necesario.
