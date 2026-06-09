@@ -1,60 +1,106 @@
-README - Automatización API DemoBlaze con Karate DSL
+PRUEBA DE CARGA – SERVICIO DE LOGIN
 
-Proyecto:
+1. DESCRIPCIÓN
 
-Este proyecto contiene pruebas automatizadas de servicios REST para las funcionalidades de Signup y Login de DemoBlaze.
+Este proyecto contiene una prueba de carga desarrollada con K6 para evaluar el comportamiento del servicio de autenticación (Login) bajo una carga constante de 20 transacciones por segundo (TPS).
 
-Servicios evaluados:
+La prueba utiliza datos parametrizados desde un archivo CSV y valida los criterios de aceptación definidos para tiempos de respuesta y tasa de error.
 
-* Signup: https://api.demoblaze.com/signup
-* Login: https://api.demoblaze.com/login
+2. TECNOLOGÍAS UTILIZADAS
 
-Tecnologías utilizadas:
+* K6 v2.0.0
+* JavaScript ES6
+* CSV para parametrización de datos
+* Windows PowerShell
 
-* Java 17
-* Gradle
-* Karate DSL
-* JUnit 5
+3. ESTRUCTURA DEL PROYECTO
 
-Casos automatizados:
+performance-login-test/
 
-1. Crear un nuevo usuario en signup.
-2. Intentar crear un usuario ya existente.
-3. Login con usuario y contraseña correctos.
-4. Login con usuario y contraseña incorrectos.
+├── data/
+│   └── users.csv
+│
+├── scripts/
+│   └── login-load-test.js
+│
+├── reports/
+│   └── summary.json
+│
+├── README.txt
+├── conclusiones.txt
+└── .gitignore
 
-Requisitos previos:
+4. DATOS DE PRUEBA
 
-* Tener instalado Java JDK 17 o superior.
-* Tener conexión a internet.
-* Tener Gradle configurado o utilizar el Gradle Wrapper incluido.
+Los datos utilizados durante la ejecución se encuentran parametrizados en el archivo:
 
-Pasos de ejecución:
+data/users.csv
 
-1. Clonar el repositorio:
+Cada iteración selecciona de forma aleatoria un usuario para realizar la autenticación.
 
-git clone <https://github.com/sanpulido97/demoblaze-api-karate.git>
+5. ESCENARIO DE CARGA
 
-2. Ingresar al proyecto:
+Configuración aplicada:
 
-cd demoblaze-api-karate
+* Tipo de escenario: Constant Arrival Rate
+* Tasa objetivo: 20 TPS
+* Duración: 5 minutos
+* VUs preasignados: 20
+* Máximo de VUs: 100
 
-3. Ejecutar las pruebas:
+6. CRITERIOS DE ACEPTACIÓN
 
-./gradlew clean test
+* Tiempo máximo permitido: 1.5 segundos
+* Tasa de error permitida: menor al 3%
+* Respuesta exitosa del servicio
+* Generación correcta del token de autenticación
 
-En Windows PowerShell:
+7. THRESHOLDS CONFIGURADOS
 
-.\gradlew clean test
+http_req_duration:
+p(95) < 1500 ms
 
-4. Abrir el reporte generado:
+http_req_failed:
+rate < 0.03
 
-build/reports/tests/test/index.html
+checks:
+rate > 0.97
 
-Resultado esperado:
+8. INSTALACIÓN
 
-La ejecución debe finalizar correctamente con los 4 escenarios exitosos y una tasa de éxito del 100%.
+Instalar K6:
 
-Notas:
+winget install k6 --source winget
 
-Las pruebas imprimen en consola las entradas enviadas y las salidas recibidas para cada caso evaluado, permitiendo evidenciar el comportamiento de los servicios Signup y Login.
+Verificar instalación:
+
+k6 version
+
+9. EJECUCIÓN
+
+Ubicarse en la raíz del proyecto y ejecutar:
+
+k6 run scripts/login-load-test.js
+
+Para exportar el resumen de resultados:
+
+k6 run --summary-export=reports/summary.json scripts/login-load-test.js
+
+10. VALIDACIONES IMPLEMENTADAS
+
+* Código HTTP 200 o 201
+* Tiempo de respuesta menor o igual a 1.5 segundos
+* Existencia del token de autenticación
+* Monitoreo de tasa de errores
+
+11. RESULTADOS OBTENIDOS
+
+* Peticiones ejecutadas: 6001
+* Tiempo promedio: 479.65 ms
+* Percentil 95: 510.97 ms
+* Tasa de error: 0.06 %
+* Checks exitosos: 99.45 %
+
+12. CONCLUSIÓN
+
+El servicio evaluado cumplió satisfactoriamente los criterios de aceptación definidos para la prueba de carga, manteniendo tiempos de respuesta y tasa de error dentro de los límites establecidos.
